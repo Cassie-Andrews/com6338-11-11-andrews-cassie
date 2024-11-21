@@ -9,18 +9,40 @@ const getJSON = url => fetch(url).then(res => res.json())
 const pipe = (...fns) => firstArg => fns.reduce((returnValue, fn) => fn(returnValue), firstArg)
 
 // helper function #1
-    // This function is curried to take the tag name as an argument, and then return a function that takes its argument and nests it with the tag. This function can be used in various ways to create html elements for makePoemHTML. Here are some usage examples of makeTag:
 const makeTag = tag => str => `<${tag}>${str}</${tag}>`
+    // This function is curried to take the tag name as an argument, and then return a function that takes its argument and nests it with the tag. 
+    // This function can be used in various ways to create html elements for makePoemHTML. Here are some usage examples of makeTag:
 
-// complete this function
-    // makePoemHTML will accept PoetryDB API's response and should output a single string of html. This string should consist of an h2 element containing the title of the poem, an em element containing "by " and the author's name that is itself inside of an h3element, and then paragraph elements for each stanza of the poem that contain lines separated by linebreak tags.
-    // Note that the last line in each paragraph tag does NOT contain a linebreak element after it.
-const makePoemHTML = () => {}
+// !!complete this function!!
+const makePoemHTML = (poemData) => {
+// makePoemHTML will accept PoetryDB API's response and should output a single string of html. 
+    const title = poemData[0].title;
+    const author = poemData[0].author;
+    const lines = poemData[0].lines;
 
+    // This string should consist of:
+    // an h2 element containing the title of the poem
+    const titleHTML = makeTag('h2')(title);
+    // an em element containing "by " and the author's name that is itself inside of an h3 element
+    const authorHTML = makeTag('em')(
+        `by ${makeTag('em')('author')}`
+    );
+    // and then paragraph elements for each stanza of the poem that contain lines separated by linebreak tags.
+    const stanzasHTML = makeTag('')();
+        // Note that the last line in each paragraph tag does NOT contain a linebreak element after it.
+
+}
+
+
+
+// FETCH POEM DATA
 // attach a click event to #get-poem
 getPoemBtn.onclick = async function() {
   // renders the HTML string returned by makePoemHTML to #poem
   poemEl.innerHTML = makePoemHTML(await getJSON(poemURL))
+
+  const poemData = await getJSON(poemURL);
+  console.log(poemData)
 }
 
 
