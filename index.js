@@ -16,38 +16,29 @@ const makeTag = tag => str => `<${tag}>${str}</${tag}>`
 // !!!complete this function!!
 const makePoemHTML = (poetryResponse) => {
 // makePoemHTML will accept PoetryDB API's response and should output a single string of html. 
-    const title = poetryResponse[0].title;
-    const author = poetryResponse[0].author;
-    const lines = poetryResponse[0].lines;
 
-    // This string should consist of:
-    // an h2 element containing the title of the poem
-    const titleHTML = makeTag('h2')(title);
-    // an em element containing "by " and the author's name that is itself inside of an h3 element
-    const authorHTML = makeTag('h3')(
-        makeTag('em')('by ' + author)
-    );
-    // and then paragraph elements for each stanza of the poem that contain lines separated by linebreak tags.
+    // display poem title
+    const titleHTML = makeTag('h2')(poetryResponse[0].title);
     
+    // display 'by: author' as an em el inside of an h3 el
+    const authorHTML = makeTag('h3')(makeTag('em')('by ' + poetryResponse[0].author));
     
-    const linesHTML = Object.values(lines) // isolate each line as a string
-        .map(line => makeTag('br')(line)) // add <br> to seperate each line
-        .join(''); // then join to make a string
+    // display poem as paragraph elements for each stanza  
+    const stanzasHTML = makeTag('p')(poetryResponse[0].lines);
+    // each stanza should contain lines separated by linebreak tags
 
-    const stanzasHTML = makeTag('p')(linesHTML) // make stanza with <p> element from each line
+
     
-    console.log(stanzasHTML)
+
+
+
     
-    /* map(stanza => {const linesHTML = stanza // from lines elements
-            // and make each stanza a <p> element
-            return makeTag('p')(linesHTML);
-    }
-    );
+
+    // console.log(typeof stanzasHTML)
+    
         // Note that the last line in each paragraph tag does NOT contain a linebreak element after it.
 
-*/
-    return titleHTML + authorHTML + stanzasHTML;
-
+    return titleHTML + authorHTML + stanzasHTML ;
 }
 
 
