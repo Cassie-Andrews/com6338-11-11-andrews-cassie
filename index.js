@@ -13,7 +13,7 @@ const makeTag = tag => str => `<${tag}>${str}</${tag}>`
     // This function is curried to take the tag name as an argument, and then return a function that takes its argument and nests it with the tag. 
     // This function can be used in various ways to create html elements for makePoemHTML. Here are some usage examples of makeTag:
 
-// !!complete this function!!
+// !!!complete this function!!
 const makePoemHTML = (poemData) => {
 // makePoemHTML will accept PoetryDB API's response and should output a single string of html. 
     const title = poemData[0].title;
@@ -24,12 +24,16 @@ const makePoemHTML = (poemData) => {
     // an h2 element containing the title of the poem
     const titleHTML = makeTag('h2')(title);
     // an em element containing "by " and the author's name that is itself inside of an h3 element
-    const authorHTML = makeTag('em')(
-        `by ${makeTag('em')('author')}`
+    const authorHTML = makeTag('h3')(
+        makeTag('em')('by ' + author)
     );
     // and then paragraph elements for each stanza of the poem that contain lines separated by linebreak tags.
+    // !!! for each -> use map
     const stanzasHTML = makeTag('')();
         // Note that the last line in each paragraph tag does NOT contain a linebreak element after it.
+
+
+    return titleHTML + authorHTML + stanzasHTML;
 
 }
 
