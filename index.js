@@ -14,11 +14,11 @@ const makeTag = tag => str => `<${tag}>${str}</${tag}>`
     // This function can be used in various ways to create html elements for makePoemHTML. Here are some usage examples of makeTag:
 
 // !!!complete this function!!
-const makePoemHTML = (poemData) => {
+const makePoemHTML = (poetryResponse) => {
 // makePoemHTML will accept PoetryDB API's response and should output a single string of html. 
-    const title = poemData[0].title;
-    const author = poemData[0].author;
-    const lines = poemData[0].lines;
+    const title = poetryResponse[0].title;
+    const author = poetryResponse[0].author;
+    const lines = poetryResponse[0].lines;
 
     // This string should consist of:
     // an h2 element containing the title of the poem
@@ -28,11 +28,24 @@ const makePoemHTML = (poemData) => {
         makeTag('em')('by ' + author)
     );
     // and then paragraph elements for each stanza of the poem that contain lines separated by linebreak tags.
-    // !!! for each -> use map
-    const stanzasHTML = makeTag('')();
+    
+    
+    const linesHTML = Object.values(lines) // isolate each line as a string
+        .map(line => makeTag('br')(line)) // add <br> to seperate each line
+        .join(''); // then join to make a string
+
+    const stanzasHTML = makeTag('p')(linesHTML) // make stanza with <p> element from each line
+    
+    console.log(stanzasHTML)
+    
+    /* map(stanza => {const linesHTML = stanza // from lines elements
+            // and make each stanza a <p> element
+            return makeTag('p')(linesHTML);
+    }
+    );
         // Note that the last line in each paragraph tag does NOT contain a linebreak element after it.
 
-
+*/
     return titleHTML + authorHTML + stanzasHTML;
 
 }
@@ -45,8 +58,8 @@ getPoemBtn.onclick = async function() {
   // renders the HTML string returned by makePoemHTML to #poem
   poemEl.innerHTML = makePoemHTML(await getJSON(poemURL))
 
-  const poemData = await getJSON(poemURL);
-  console.log(poemData)
+  const poetryResponse = await getJSON(poemURL);
+  console.log(poetryResponse)
 }
 
 
