@@ -4,43 +4,37 @@ const poemURL = 'https://poetrydb.org/random,linecount/1;12/author,title,lines.j
 
 const getJSON = url => fetch(url).then(res => res.json())
 
-// helper function #2
-    // Pipe is a standard feature of many functional programming libraries that allows the programmer to chain function calls together while passing the output from one function into the input of another
 const pipe = (...fns) => firstArg => fns.reduce((returnValue, fn) => fn(returnValue), firstArg)
 
-// helper function #1
 const makeTag = tag => str => `<${tag}>${str}</${tag}>`
-    // This function is curried to take the tag name as an argument, and then return a function that takes its argument and nests it with the tag. 
-    // This function can be used in various ways to create html elements for makePoemHTML. Here are some usage examples of makeTag:
 
-// !!!complete this function!!
 const makePoemHTML = (poetryResponse) => {
-// makePoemHTML will accept PoetryDB API's response and should output a single string of html. 
-
+    console.log(poetryResponse);
+    
+    const lines = poetryResponse[0].lines;
+        
     // display poem title
     const titleHTML = makeTag('h2')(poetryResponse[0].title);
     
     // display 'by: author' as an em el inside of an h3 el
     const authorHTML = makeTag('h3')(makeTag('em')('by ' + poetryResponse[0].author));
-    
-    // display poem as paragraph elements for each stanza  
-    const stanzasHTML = makeTag('p')(poetryResponse[0].lines);
-    // each stanza should contain lines separated by linebreak tags
 
+    // use empty string "" to group stanzas
+    const stanzasHTML = lines
+        .reduce((stanzas, line) => {
+            if (line === "") { // if line is an empty string
+            stanzas.push([]); // end stanza
+        } else {
+            stanzas[stanzas.length - 1].push(line);// add to last stanza or create new stanza
+        }
+        return stanzas;
+    }, [[]]) // start empty stanza
+    .map(stanza => makeTag('p')(stanza.join('<br>')))// display each stanza as paragraph elements, join lines with br elements
+    .join(''); // join stanzas to one string 
 
-    
-
-
-
-    
-
-    // console.log(typeof stanzasHTML)
-    
-        // Note that the last line in each paragraph tag does NOT contain a linebreak element after it.
-
+    // makePoemHTML should output a single string of HTML
     return titleHTML + authorHTML + stanzasHTML ;
 }
-
 
 
 // FETCH POEM DATA
@@ -48,9 +42,6 @@ const makePoemHTML = (poetryResponse) => {
 getPoemBtn.onclick = async function() {
   // renders the HTML string returned by makePoemHTML to #poem
   poemEl.innerHTML = makePoemHTML(await getJSON(poemURL))
-
-  const poetryResponse = await getJSON(poemURL);
-  console.log(poetryResponse)
 }
 
 
